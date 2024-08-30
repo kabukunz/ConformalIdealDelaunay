@@ -97,7 +97,8 @@ int main(int argc, char* argv[]){
   obj_to_mesh(V, F, m);
 
   Eigen::MatrixXd Theta_hat_vec;
-  igl::readCSV(th_file, Theta_hat_vec);
+//   igl::readCSV(th_file, Theta_hat_vec);
+  igl::readCSV(data_dir + "/" + th_file, Theta_hat_vec);
   
   std::vector<double> Th_hat;
   igl::matrix_to_list(Theta_hat_vec, Th_hat);

@@ -241,6 +241,7 @@ def do_conformal(m, dir, out, output_type="param", output_format="obj", use_mpf=
         print(" 'png' (compatible with 'render' only)")
         print(" 'pickle' (compatible with 'he_metric', 'vf_metric' and 'param')")
         print(" 'obj' (compatible with 'param')")
+        
 if __name__ == "__main__":
 
   # Parse arguments for the script
