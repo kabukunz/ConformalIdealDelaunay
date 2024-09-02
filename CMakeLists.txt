@@ -29,7 +29,7 @@ add_compile_definitions(PYBIND)
 add_subdirectory(${DIR_EXT}/pybind11)
 add_subdirectory(${DIR_EXT}/spdlog)
 
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/conformal_seamless_similarity")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/conformal_seamless_similarity")
 # # for comparison - wrapper for comformal-similarity-map
 # add_executable(CSM_bin src/conformal_seamless_similarity/CSM.cpp)
 # target_link_libraries(CSM_bin PUBLIC igl::core)

@@ -16,65 +16,65 @@ RenderInfo = namedtuple(
     'RenderInfo', 'pt_fids, pt_bcs, fid_mat, bc_mat, cam, bd_thick, view, proj, H, W')
 
 
-def render_texture(out, name, v3d, f, m, u, cones, reindex, render_info, build_double):
-    fid_mat = render_info.fid_mat
-    pt_fids = render_info.pt_fids
-    pt_bcs = render_info.pt_bcs
-    bc_mat = render_info.bc_mat
-    cam = render_info.cam
-    bd_thick = render_info.bd_thick
-    view = render_info.view
-    proj = render_info.proj
-    H = render_info.H
-    W = render_info.W
-    reindex = np.array(reindex)
-    # update original cone ids to m
-    cones = [idx for idx in range(len(reindex)) if reindex[idx] in cones]
+# def render_texture(out, name, v3d, f, m, u, cones, reindex, render_info, build_double):
+#     fid_mat = render_info.fid_mat
+#     pt_fids = render_info.pt_fids
+#     pt_bcs = render_info.pt_bcs
+#     bc_mat = render_info.bc_mat
+#     cam = render_info.cam
+#     bd_thick = render_info.bd_thick
+#     view = render_info.view
+#     proj = render_info.proj
+#     H = render_info.H
+#     W = render_info.W
+#     reindex = np.array(reindex)
+#     # update original cone ids to m
+#     cones = [idx for idx in range(len(reindex)) if reindex[idx] in cones]
 
-    fid_mat_input = deepcopy(fid_mat)
-    bc_mat_input = deepcopy(bc_mat)
-    cnt = 0
-    for i in trange(H):
-        for j in range(W):
-            if fid_mat[i][j] > -1:
-                fid_mat[i][j] = pt_fids[cnt]
-                bc_mat[i][j] = pt_bcs[cnt]
-                cnt += 1
+#     fid_mat_input = deepcopy(fid_mat)
+#     bc_mat_input = deepcopy(bc_mat)
+#     cnt = 0
+#     for i in trange(H):
+#         for j in range(W):
+#             if fid_mat[i][j] > -1:
+#                 fid_mat[i][j] = pt_fids[cnt]
+#                 bc_mat[i][j] = pt_bcs[cnt]
+#                 cnt += 1
 
-    is_cut_h = []
-    if use_mpf:
-        u_cpp, v_cpp, is_cut_h = layout_mpf(m, list(u), is_cut_h, -1)
-        u_cpp = [mp.mpf(repr(u_cppi)) for u_cppi in u_cpp]
-        v_cpp = [mp.mpf(repr(v_cppi)) for v_cppi in v_cpp]
-    else:
-        u_cpp, v_cpp, is_cut_h = layout_float(m, list(u), is_cut_h, -1)
+#     is_cut_h = []
+#     if use_mpf:
+#         u_cpp, v_cpp, is_cut_h = layout_mpf(m, list(u), is_cut_h, -1)
+#         u_cpp = [mp.mpf(repr(u_cppi)) for u_cppi in u_cpp]
+#         v_cpp = [mp.mpf(repr(v_cppi)) for v_cppi in v_cpp]
+#     else:
+#         u_cpp, v_cpp, is_cut_h = layout_float(m, list(u), is_cut_h, -1)
 
-    fid_mat = add_cut_to_sin(m.n, m.opp, m.to, cones, m.type, is_cut_h,
-                             reindex, v3d, f, bd_thick, fid_mat, cam, H, W, build_double)
-    N_bw = 10
+#     fid_mat = add_cut_to_sin(m.n, m.opp, m.to, cones, m.type, is_cut_h,
+#                              reindex, v3d, f, bd_thick, fid_mat, cam, H, W, build_double)
+#     N_bw = 10
 
-    def cprs(x):
-        x = max(0, min(1, x))
-        return max(0, min(1, 3 * x * x - 2 * x * x * x))
+#     def cprs(x):
+#         x = max(0, min(1, x))
+#         return max(0, min(1, 3 * x * x - 2 * x * x * x))
 
-    print("draw grid...")
-    if use_mpf:
-        u = np.array([mp.mpf(repr(ui)) for ui in u])
-        color_rgb_gd = draw_grid_mpf(
-            fid_mat, bc_mat, m.h, m.n, m.to, u_cpp, v_cpp, u, cprs, H, W, N_bw)
-    else:
-        u = np.array(u)
-        # faster but less accurate float alternative: draw_grid
-        color_rgb_gd = draw_grid(fid_mat, bc_mat, m.h,
-                                 m.n, m.to, u_cpp, v_cpp, u, cprs, H, W, N_bw)
+#     print("draw grid...")
+#     if use_mpf:
+#         u = np.array([mp.mpf(repr(ui)) for ui in u])
+#         color_rgb_gd = draw_grid_mpf(
+#             fid_mat, bc_mat, m.h, m.n, m.to, u_cpp, v_cpp, u, cprs, H, W, N_bw)
+#     else:
+#         u = np.array(u)
+#         # faster but less accurate float alternative: draw_grid
+#         color_rgb_gd = draw_grid(fid_mat, bc_mat, m.h,
+#                                  m.n, m.to, u_cpp, v_cpp, u, cprs, H, W, N_bw)
 
-    plt.imsave(out + "/" + name + "_" + str(N_bw) +
-               "_gd_plain.png", color_rgb_gd)
+#     plt.imsave(out + "/" + name + "_" + str(N_bw) +
+#                "_gd_plain.png", color_rgb_gd)
 
-    print("add shading...")
-    add_shading(color_rgb_gd, v3d, f, fid_mat_input, bc_mat_input, view, proj)
+#     print("add shading...")
+#     add_shading(color_rgb_gd, v3d, f, fid_mat_input, bc_mat_input, view, proj)
 
-    plt.imsave(out + "/" + name + "_" + str(N_bw) + "_gd.png", color_rgb_gd)
+#     plt.imsave(out + "/" + name + "_" + str(N_bw) + "_gd.png", color_rgb_gd)
 
 
 def do_conformal(m, dir, out, output_type="param", output_format="obj", use_mpf=False, error_log=False, energy_cond=False, energy_samples=False, suffix=None, flip_count=False, prec=None, no_round_Th_hat=False, print_summary=False, eps=None, no_plot_result=False, bypass_overlay=False, max_itr=500, no_lm_reset=False, do_reduction=False, lambda0=1, bound_norm_thres=1, log_level=2):
@@ -204,8 +204,8 @@ def do_conformal(m, dir, out, output_type="param", output_format="obj", use_mpf=
             if not no_plot_result:
                 render_info = RenderInfo(
                     pt_fids, pt_bcs, fid_mat, bc_mat, cam, bd_thick, view, proj, H, W)
-                render_texture(out, name, v3d, f, m, u, cones,
-                               reindex, render_info, build_double)
+                # render_texture(out, name, v3d, f, m, u, cones,
+                #                reindex, render_info, build_double)
         else:
             print("non-supported output-type/output-format")
             print("output_type options:")
@@ -259,8 +259,8 @@ def do_conformal(m, dir, out, output_type="param", output_format="obj", use_mpf=
             if not no_plot_result:
                 render_info = RenderInfo(
                     pt_fids, pt_bcs, fid_mat, bc_mat, cam, bd_thick, view, proj, H, W)
-                render_texture(out, name, v3d, f, m, u, cones,
-                               reindex, render_info, build_double)
+                # render_texture(out, name, v3d, f, m, u, cones,
+                #                reindex, render_info, build_double)
         else:
             print("non-supported output-type/output-format")
             print("output_type options:")
