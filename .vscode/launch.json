@@ -21,7 +21,9 @@
                 "-d",
                 "${workspaceFolder}/data/examples",
                 "-m",
-                "aircraft.obj"
+                "aircraft.obj",
+                "-t",
+                "aircraft_Th_hat"
             ]
         },
     ]
