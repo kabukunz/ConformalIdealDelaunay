@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "lldb",
             "request": "launch",
@@ -25,6 +26,24 @@
                 "-t",
                 "aircraft_Th_hat"
             ]
+        },
+        {
+            "name": "(Windows) CSM",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/CSM.exe",
+            "args": [
+                "-d",
+                "${workspaceFolder}/data/examples",
+                "-m",
+                "aircraft.obj",
+                "-t",
+                "aircraft_Th_hat"
+            ],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "integratedTerminal"
         },
     ]
 }
