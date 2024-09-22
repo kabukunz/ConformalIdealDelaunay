@@ -45,5 +45,22 @@
             "environment": [],
             "console": "integratedTerminal"
         },
+        {
+            "name": "Python: script_conformal.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/py/script_conformal.py",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "justMyCode": true,
+            "args": [
+                "-i data/examples",
+                "-f aircraft.obj",
+                "--error_log",
+                "--print_summary",
+                "--output_type param",
+                "--output_format obj",
+            ],
+        },
     ]
 }

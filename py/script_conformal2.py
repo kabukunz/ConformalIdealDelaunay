@@ -124,23 +124,23 @@ def do_conformal(m, dir, out, output_type="param", output_format="obj", use_mpf=
     pt_fids = []
     pt_bcs = []
 
-    if output_type == "render" and output_format == "png" and not no_plot_result:
-        with open("data/cameras/" + name + "_camera.pickle", 'rb') as fp:
-            cam = pickle.load(fp)
-            vc = pickle.load(fp)
-            fc = pickle.load(fp)
-            red_size = pickle.load(fp)
-            blue_size = pickle.load(fp)
-        (view, proj, vp) = cam
-        if not build_double:
-            fc = fc[:red_size+blue_size, :]
-        fid_mat, bc_mat = get_pt_mat(
-            cam, v3d, f, vc, fc, red_size, blue_size, W, H)
-        for i in range(H):
-            for j in range(W):
-                if fid_mat[i][j] > -1:
-                    pt_fids.append(fid_mat[i][j])
-                    pt_bcs.append(bc_mat[i][j])
+    # if output_type == "render" and output_format == "png" and not no_plot_result:
+    #     with open("data/cameras/" + name + "_camera.pickle", 'rb') as fp:
+    #         cam = pickle.load(fp)
+    #         vc = pickle.load(fp)
+    #         fc = pickle.load(fp)
+    #         red_size = pickle.load(fp)
+    #         blue_size = pickle.load(fp)
+    #     (view, proj, vp) = cam
+    #     if not build_double:
+    #         fc = fc[:red_size+blue_size, :]
+    #     fid_mat, bc_mat = get_pt_mat(
+    #         cam, v3d, f, vc, fc, red_size, blue_size, W, H)
+    #     for i in range(H):
+    #         for j in range(W):
+    #             if fid_mat[i][j] > -1:
+    #                 pt_fids.append(fid_mat[i][j])
+    #                 pt_bcs.append(bc_mat[i][j])
 
     # Create algorithm parameter struct
     alg_params = AlgorithmParameters()
